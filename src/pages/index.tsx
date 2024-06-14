@@ -7,7 +7,8 @@ import IrmButton from "@/component/IrmButton.Component";
 import { IconArrowLeft } from "@tabler/icons-react";
 import IrmErrorPage from "../component/IrmErrorPage.Component";
 import IrmSelect from "@/component/IrmSelect.Component";
-import IrmTextArea from "@/component/IrmTextArea.Component";
+import IrmProgress from "@/component/IrmProgress.Component";
+
 
 export default function Home() {
 
@@ -56,14 +57,20 @@ export default function Home() {
           { value: '1', label: 'Option 1' },
           { value: '2', label: 'Option 2' },
           { value: '3', label: 'Option 3' },
+          { value: '4', label: 'Option 1' },
+          { value: '5', label: 'Option 2' },
+         
         ]}
         mode="multiple"
         placeholder="Select options"
         size="large" 
-        loading
         allowClear
         onChange={handleChange}
       />
+       <IrmProgress  percent={70} type="circle" status="active" size={"small"} format={(percent) => `${percent} Days`} gapDegree={30} success={{ percent: 30 }} strokeLinecap="butt" strokeWidth={60}/>
+       <IrmProgress strokeLinecap="round" percent={100} align="start" showInfo
+       strokeWidth={30} gapPosition="bottom" size={'default'} steps={8} successPercent={60} percentPosition={{ align: 'center', type: 'inner' }}/>
+          <IrmProgress strokeLinecap="square" percent={70} status="active" percentPosition={{ align: 'center', type: 'inner' }}/>
                   <div>
     <IrmErrorPage status="error" />
     <IrmErrorPage status="500" />

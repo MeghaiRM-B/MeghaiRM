@@ -1,7 +1,9 @@
-import { Select, ConfigProvider } from 'antd';
+import { Checkbox, ConfigProvider, Form, Select } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 export interface SelectProps {
+  error?: string;
+  label?: string;
   options: { value: string; label: string; disabled?: boolean }[];
   mode?: 'multiple' | undefined;
   placeholder: string | undefined;
@@ -21,6 +23,8 @@ export interface SelectProps {
   onChange?(value: string | string[]): void;
 }
 
+
+
 const IrmSelect = (props: SelectProps) => {
   const { options = [], mode, onChange, defaultValue, ...restProps } = props;
   const [selectedItems, setSelectedItems] = useState<string[]>(defaultValue as string[] || []);
@@ -28,6 +32,7 @@ const IrmSelect = (props: SelectProps) => {
   const allValues = options.map(option => option.value);
   const selectAllOption = { value: 'select_all', label: 'Select All' };
 
+  // Handle change in selection
   const handleChange = (value: string[]) => {
     if (value.includes(selectAllOption.value)) {
       if (selectedItems.length === allValues.length) {
@@ -38,19 +43,46 @@ const IrmSelect = (props: SelectProps) => {
         onChange && onChange(allValues);
       }
     } else {
-      setSelectedItems(value);
-      onChange && onChange(value);
+      setSelectedItems(value.filter(item => item !== selectAllOption.value));
+      onChange && onChange(value.filter(item => item !== selectAllOption.value));
     }
   };
 
+  // Update selected items when default value changes
   useEffect(() => {
     setSelectedItems(defaultValue as string[] || []);
   }, [defaultValue]);
+
+  // Render options with checkboxes
+  const renderOptions = () => {
+    return options.map(option => (
+      <Select.Option key={option.value} value={option.value} disabled={option.disabled}>
+        {mode === 'multiple' && option.value !== selectAllOption.value ? <Checkbox checked={selectedItems.includes(option.value)} style={{ marginRight: 8 }}/> : null}
+        {option.label}
+      </Select.Option>
+    ));
+  };
+
+  // Render Select All checkbox
+  const renderSelectAllCheckbox = () => {
+    return (
+      <Select.Option key={selectAllOption.value} value={selectAllOption.value}>
+        <Checkbox checked={selectedItems.length === allValues.length} style={{ marginRight: 8 }}/>
+        {selectAllOption.label}
+      </Select.Option>
+    );
+  };
 
   return (
     <ConfigProvider
       theme={{
         components: {
+          Checkbox: {
+            colorPrimary :  'var(--Black-2, #ABABAB)',
+            colorPrimaryBgHover:  'var(--Black-2, #ABABAB)',
+            colorPrimaryHover:  'var(--Black-2, #ABABAB)',
+            
+          },
           Select: {
             optionActiveBg: 'rgba(0, 0, 0, 0.04)',
             optionPadding: '1px 4px 1px 4px',
@@ -65,14 +97,25 @@ const IrmSelect = (props: SelectProps) => {
         },
       }}
     >
+      <Form.Item 
+            label={props.label} 
+            validateStatus={props.error ? 'error' : 'success'}
+            help={props.error}
+        >
       <Select
-        {...restProps}
-        mode={mode}
-        options={mode === 'multiple' ? [selectAllOption, ...options] : options}
-        value={selectedItems}
-        onChange={handleChange}
-        filterOption={(input, option) => option ? option.label.toLowerCase().includes(input.toLowerCase()) : false}
-      />
+  {...restProps}
+  mode={mode}
+  value={selectedItems}
+  onChange={handleChange}
+  filterOption={(input, option) =>
+    option && option.label ? option.label.toString().toLowerCase().includes(input.toLowerCase()) : false
+  }
+  style={{ minWidth:'5%', maxWidth: '20%' }}
+>
+  {mode === 'multiple' ? renderSelectAllCheckbox() : null}
+  {renderOptions()}
+</Select>
+</Form.Item>
     </ConfigProvider>
   );
 };
