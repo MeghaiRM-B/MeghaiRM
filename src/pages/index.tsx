@@ -2,12 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Store } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
-import { Button, ConfigProvider } from "antd";
+import { Button, ConfigProvider, Space } from "antd";
 import IrmButton from "@/component/IrmButton.Component";
 import { IconArrowLeft } from "@tabler/icons-react";
 import IrmErrorPage from "../component/IrmErrorPage.Component";
 import IrmSelect from "@/component/IrmSelect.Component";
 import IrmProgress from "@/component/IrmProgress.Component";
+import IrmDrawer from "@/component/IrmDrawer.Component";
+import { useState } from "react";
 
 
 export default function Home() {
@@ -21,6 +23,15 @@ export default function Home() {
     console.log('Selected:', value);
   };
   
+  const [open, setOpen] = useState(false);
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
   
 
   return (
@@ -67,9 +78,32 @@ export default function Home() {
         allowClear
         onChange={handleChange}
       />
-       <IrmProgress  percent={70} type="circle" status="active" size={"small"} format={(percent) => `${percent} Days`} gapDegree={30} success={{ percent: 30 }} strokeLinecap="butt" strokeWidth={60}/>
+     <IrmDrawer placement="top" title="drawer page" width={"50px"}
+     extra={
+      <Space>
+        <Button onClick={onClose}>Cancel</Button>
+        <Button type="primary" onClick={onClose}>
+          OK
+        </Button>
+      </Space>
+    }  children="hello" keyboard footer="footer" footerPaddingBlock={60} footerPaddingInline={80} zIndexPopup={60000}/> 
+    <IrmDrawer
+        placement="right"
+        size="default"
+        title="First Level Drawer"
+        secondDrawerProps={{
+          placement: "right",
+          title: "Second Level Drawer",
+          loading: true,
+          openButtonProps: { type: 'primary', children: 'Open Second Drawer' },
+        }}
+        openButtonProps={{ type: 'default', children: 'Open Drawer' }}
+      >
+        This is the content of the first-level drawer.
+      </IrmDrawer>
+       <IrmProgress  percent={70} type="circle" status="exception" size={"small"} format={(percent) => `${percent} Days`} gapDegree={30} success={{ percent: 30 }} strokeLinecap="butt" strokeWidth={60}/>
        <IrmProgress strokeLinecap="round" percent={100} align="start" showInfo
-       strokeWidth={30} gapPosition="bottom" size={'default'} steps={8} successPercent={60} percentPosition={{ align: 'center', type: 'inner' }}/>
+       strokeWidth={30} gapPosition="bottom" size={'default'} steps={8} successPercent={60} percentPosition={{ align: 'center', type: 'inner' }} />
           <IrmProgress strokeLinecap="square" percent={70} status="active" percentPosition={{ align: 'center', type: 'inner' }}/>
                   <div>
     <IrmErrorPage status="error" />

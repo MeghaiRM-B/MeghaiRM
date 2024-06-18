@@ -23,31 +23,39 @@ export interface SelectProps {
   onChange?(value: string | string[]): void;
 }
 
-
-
 const IrmSelect = (props: SelectProps) => {
   const { options = [], mode, onChange, defaultValue, ...restProps } = props;
   const [selectedItems, setSelectedItems] = useState<string[]>(defaultValue as string[] || []);
-
   const allValues = options.map(option => option.value);
   const selectAllOption = { value: 'select_all', label: 'Select All' };
 
   // Handle change in selection
   const handleChange = (value: string[]) => {
-    if (value.includes(selectAllOption.value)) {
-      if (selectedItems.length === allValues.length) {
+    if (mode === 'multiple') {
+      if (value.includes(selectAllOption.value)) {
+        if (selectedItems.length === allValues.length) {
+          setSelectedItems([]);
+          onChange && onChange([]);
+        } else {
+          setSelectedItems(allValues);
+          onChange && onChange(allValues);
+        }
+      } else {
+        setSelectedItems(value.filter(item => item !== selectAllOption.value));
+        onChange && onChange(value.filter(item => item !== selectAllOption.value));
+      }
+    } else {
+      // Single selection mode
+      if (value.length === 0) {
         setSelectedItems([]);
         onChange && onChange([]);
       } else {
-        setSelectedItems(allValues);
-        onChange && onChange(allValues);
+        const newValue = value[value.length - 1];
+        setSelectedItems([newValue]);
+        onChange && onChange([newValue]);
       }
-    } else {
-      setSelectedItems(value.filter(item => item !== selectAllOption.value));
-      onChange && onChange(value.filter(item => item !== selectAllOption.value));
     }
   };
-
   // Update selected items when default value changes
   useEffect(() => {
     setSelectedItems(defaultValue as string[] || []);
@@ -72,6 +80,10 @@ const IrmSelect = (props: SelectProps) => {
       </Select.Option>
     );
   };
+
+  // const customTagRender = () => {
+  //   return <span style={{ display: 'none' }} />;
+  // };
 
   return (
     <ConfigProvider
@@ -107,6 +119,7 @@ const IrmSelect = (props: SelectProps) => {
   mode={mode}
   value={selectedItems}
   onChange={handleChange}
+  // tagRender={customTagRender}
   filterOption={(input, option) =>
     option && option.label ? option.label.toString().toLowerCase().includes(input.toLowerCase()) : false
   }
