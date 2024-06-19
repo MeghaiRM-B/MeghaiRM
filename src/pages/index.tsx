@@ -86,7 +86,7 @@ export default function Home() {
           OK
         </Button>
       </Space>
-    }  children="hello" keyboard footer="footer" footerPaddingBlock={60} footerPaddingInline={80} zIndexPopup={60000}/> 
+    }  children="hello" keyboard footer="footer" footerPaddingBlock={60} footerPaddingInline={80} zIndexPopup={60000}  openButtonProps={{ type: 'default', children: 'Open Drawer' }}/> 
     <IrmDrawer
         placement="right"
         size="default"
@@ -95,9 +95,9 @@ export default function Home() {
           placement: "right",
           title: "Second Level Drawer",
           loading: true,
-          openButtonProps: { type: 'primary', children: 'Open Second Drawer' },
+          openButtonProps: { type: 'default', children: 'Open Second Drawer' },
         }}
-        openButtonProps={{ type: 'default', children: 'Open Drawer' }}
+        openButtonProps={{ type: 'default', children: 'Open ' }}
       >
         This is the content of the first-level drawer.
       </IrmDrawer>

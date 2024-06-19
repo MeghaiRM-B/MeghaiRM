@@ -52,8 +52,7 @@ const IrmDrawer = (props: DrawerProps) => {
       {props.openButtonProps ? (
         <Button {...props.openButtonProps} onClick={showFirstDrawer} />
       ) : (
-        <Button type="primary" onClick={showFirstDrawer}>
-          Open
+        <Button onClick={showFirstDrawer}>
         </Button>
       )}
       <Drawer onClose={closeFirstDrawer} open={openFirstDrawer} {...props}>
@@ -63,7 +62,7 @@ const IrmDrawer = (props: DrawerProps) => {
             {props.secondDrawerProps.openButtonProps ? (
               <Button {...props.secondDrawerProps.openButtonProps} onClick={showSecondDrawer} />
             ) : (
-              <Button onClick={showSecondDrawer}>Second Drawer</Button>
+              <Button onClick={showSecondDrawer}></Button>
             )}
             <Drawer onClose={closeSecondDrawer} open={openSecondDrawer} {...props.secondDrawerProps}>
               {props.secondDrawerProps.children}
