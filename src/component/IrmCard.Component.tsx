@@ -10,7 +10,6 @@ export interface CardProps{
   size?:"default" | "small";
   title?:string;
   cardType?: 'inner';
-  description?:string;
   avatar?:ReactNode;
   style?: React.CSSProperties;
   children: ReactNode;
