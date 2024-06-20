@@ -1,5 +1,5 @@
 import React from 'react';
-import { Progress, ConfigProvider } from 'antd';
+import { Progress } from 'antd';
 import {
   ProgressGradient,
   ProgressSize,
@@ -40,9 +40,7 @@ const IrmProgress = (props: ProgressProps) => {
   const { children, ...restProps } = props;
 
   return (
-    <ConfigProvider>
       <Progress {...restProps}>{children}</Progress>
-    </ConfigProvider>
   );
 };
 

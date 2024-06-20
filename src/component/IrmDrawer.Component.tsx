@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Drawer, ConfigProvider, Button, Space } from 'antd';
+import { Drawer, Button, Space } from 'antd';
 import type { ClosableType } from 'antd/es/_util/hooks/useClosable';
 import type { DrawerProps as RCDrawerProps } from 'rc-drawer';
 import type { DrawerProps as AntDrawerProps } from 'antd/es/drawer';
@@ -8,71 +8,73 @@ import { ButtonProps } from 'antd/es/button';
 export interface DrawerProps {
   placement: "top" | "right" | "bottom" | "left";
   size?: "default" | "large";
-  title?: string;
+  title: string;
   loading?: boolean;
   open?: boolean;
   width?: string | number;
-  zIndex?:number
+  zIndex?: number;
   extra?: React.ReactNode;
   closable?: ClosableType;
   onClose?: RCDrawerProps['onClose'];
-  children?: string;
-  footer?:string;
-  keyboard?:boolean;
-  push?:boolean | { distance: string | number };
-  footerPaddingBlock?:number
-  footerPaddingInline?:number
-  zIndexPopup?:number
+  children: string;
+  footer?: string;
+  keyboard?: boolean;
+  push?: boolean | { distance: string | number };
   secondDrawerProps?: AntDrawerProps;
-  openButtonProps?:ButtonProps;
+  mainDrawerButtonProps?: ButtonProps;
+  childrenDrawerButtonProps?: ButtonProps;
+  spaceProps?: {
+    direction?: 'horizontal' | 'vertical';
+    size?: 'small' | 'middle' | 'large' | number;
+  };
 }
 
 const IrmDrawer = (props: DrawerProps) => {
-  const [openFirstDrawer, setOpenFirstDrawer] = useState(false);
-  const [openSecondDrawer, setOpenSecondDrawer] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [childrenDrawer, setChildrenDrawer] = useState(false);
 
-  const showFirstDrawer = () => {
-    setOpenFirstDrawer(true);
+  const showDrawer = () => {
+    setOpen(true);
   };
 
-  const closeFirstDrawer = () => {
-    setOpenFirstDrawer(false);
+  const onClose = () => {
+    setOpen(false);
   };
 
-  const showSecondDrawer = () => {
-    setOpenSecondDrawer(true);
+  const showChildrenDrawer = () => {
+    setChildrenDrawer(true);
   };
 
-  const closeSecondDrawer = () => {
-    setOpenSecondDrawer(false);
+  const onChildrenDrawerClose = () => {
+    setChildrenDrawer(false);
   };
 
   return (
-    <Space>
-      {props.openButtonProps ? (
-        <Button {...props.openButtonProps} onClick={showFirstDrawer} />
-      ) : (
-        <Button onClick={showFirstDrawer}>
-        </Button>
-      )}
-      <Drawer onClose={closeFirstDrawer} open={openFirstDrawer} {...props}>
-        {props.children}
-        {props.secondDrawerProps && (
-          <>
-            {props.secondDrawerProps.openButtonProps ? (
-              <Button {...props.secondDrawerProps.openButtonProps} onClick={showSecondDrawer} />
-            ) : (
-              <Button onClick={showSecondDrawer}></Button>
-            )}
-            <Drawer onClose={closeSecondDrawer} open={openSecondDrawer} {...props.secondDrawerProps}>
-              {props.secondDrawerProps.children}
-            </Drawer>
-          </>
-        )}
+    <>
+      <Button onClick={showDrawer} {...props.mainDrawerButtonProps}>
+        {props.mainDrawerButtonProps?.children}
+      </Button>
+      <Drawer onClose={onClose} open={open} {...props}>
+        <Space {...props.spaceProps}>
+          {props.children}
+          {props.secondDrawerProps && (
+            <>
+              <Button onClick={showChildrenDrawer} {...props.childrenDrawerButtonProps}>
+                {props.childrenDrawerButtonProps?.children}
+              </Button>
+              <Drawer
+                onClose={onChildrenDrawerClose}
+                open={childrenDrawer}
+                {...props.secondDrawerProps}
+              >
+                {props.secondDrawerProps?.children}
+              </Drawer>
+            </>
+          )}
+        </Space>
       </Drawer>
-    </Space>
+    </>
   );
 };
 
 export default IrmDrawer;
-

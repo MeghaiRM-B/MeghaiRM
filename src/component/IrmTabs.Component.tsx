@@ -1,4 +1,4 @@
-import { ConfigProvider, Tabs } from "antd";
+import { Tabs } from "antd";
 import { ReactNode, MouseEvent } from "react";
 
 export interface Tab {
@@ -30,11 +30,9 @@ export interface TabsProps {
 const IrmTabs = (props: TabsProps) => {
   const { ...restProps } = props;
   return (
-    <ConfigProvider>
     <Tabs
     {...restProps}
   ></Tabs>
-  </ConfigProvider>
   );
 }
 
